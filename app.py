@@ -2,7 +2,6 @@ from flask import Flask,jsonify,request,session,abort
 from model import VideoIndex,AdminInfo,Reply,Carousel, Message, SearchInfo, UserReview, UserVideoProgress, db, User, Course, Subtitle, VideoContent, WhatYouLearn, UserCourse, UserInfo,FavouriteInfo, Admin
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager, create_access_token,get_jwt_identity,jwt_required
-from jwt.exceptions import ExpiredSignatureError, InvalidTokenError, DecodeError
 from sqlalchemy.exc import InvalidRequestError
 import stripe
 import uuid
@@ -172,19 +171,6 @@ def logout_user():
                 return jsonify({
                     "message": "User not found"
                 }), 404
-    except ExpiredSignatureError as err:
-        print(f"JWTError: {str(err)}")
-        return jsonify({
-            "error": str(err),
-            "message": "Invalid or expired token"
-        }), 401
-    except InvalidTokenError as e:
-        # Print the details of the InvalidTokenError (401 Unauthorized)
-        print(f"InvalidTokenError: {str(e)}")
-        return jsonify({
-            "error": str(e),
-            "message": "Invalid token"
-        }), 401   
     except Exception as e:
         print(str(e))
         return jsonify({
